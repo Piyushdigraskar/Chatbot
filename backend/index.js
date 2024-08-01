@@ -6,6 +6,8 @@ import connectDb from './database/db.js';
 dotenv.config();
 const app = express();
 
+//using middleware
+app.use(express.json())
 //importing Routes
 import userRoutes from './routes/userRoutes.js';
 

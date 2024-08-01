@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const connectDb = async()=>{
+const connectDb = async () => {
     try {
         await mongoose.connect(process.env.DB_URL, {
-            dbName :"ChatbotAi",
+            dbName: "ChatbotAi",
         })
         console.log('Database Connected');
     } catch (error) {
