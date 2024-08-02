@@ -32,3 +32,37 @@ export const loginUser = async(req, res)=>{
         })
     }
 }
+
+export const verifyUser = async(req, res)=>{
+    try {
+        const {otp, verifyToken} = req.body;
+
+        const verify = jwt.verify(verifyToken, process.env.ACTIVATION_SEC);
+
+        if(!verify){
+            return res.status(400).json({
+                message:"OTP Expired"
+            })
+        }
+        if(verify.otp !== otp){
+            return res.status(400).json({
+                message:"Wrong OTP"
+            })
+        }
+
+        const token = jwt.sign({_id: verify.user._id}, process.env.JWT_SEC , {
+            expiresIn:"5d",
+        })
+
+        res.json({
+            message:"Logged In",
+            user:verify.user,
+            token,
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            message:error.message,
+        })
+    }
+}
