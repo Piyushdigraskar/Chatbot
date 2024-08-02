@@ -66,3 +66,15 @@ export const verifyUser = async(req, res)=>{
         })
     }
 }
+
+export const myProfile = async(req, res)=>{
+    try {
+        const user = await User.findById(req.user._id);
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({
+            message:error.message,
+        })
+    }
+}
