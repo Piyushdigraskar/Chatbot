@@ -47,7 +47,7 @@ export const addConversation = async (req, res) => {
         })
 
         const updateChat = await Chat.findByIdAndUpdate(req.params.id,
-            { latestMessage: req.body.answer, },
+            { latestMessage: req.body.question },
             { new: true, });
 
 
@@ -56,6 +56,28 @@ export const addConversation = async (req, res) => {
             updateChat
         })
 
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        })
+    }
+}
+
+
+export const getConversation = async(req, res)=>{
+    try {
+        const conversation = await Conversation.find({
+            chat: req.params.id
+        })
+
+        if (!conversation) {
+            return res.status(404).json({
+                message: "No conversations found with this id",
+            })
+        }
+
+
+        res.status(200).json(conversation);
     } catch (error) {
         res.status(500).json({
             message: error.message,
