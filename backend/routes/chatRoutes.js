@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAuth } from '../middleware/isAuth.js';
-import { addConversation, createChat, getAllChats, getConversation } from '../controller/chatController.js';
+import { addConversation, createChat, deleteChat, getAllChats, getConversation } from '../controller/chatController.js';
 
 const router = express.Router();
 
@@ -11,5 +11,7 @@ router.get('/all', isAuth, getAllChats);
 router.post('/:id', isAuth, addConversation);
 
 router.get('/:id', isAuth, getConversation)
+
+router.delete('/:id', isAuth, deleteChat)
 
 export default router;

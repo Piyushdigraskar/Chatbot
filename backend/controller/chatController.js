@@ -84,3 +84,31 @@ export const getConversation = async(req, res)=>{
         })
     }
 }
+
+export const deleteChat = async(req, res)=>{
+    try {
+        const chat = await Chat.findById(req.params.id);
+
+        if (!chat) {
+            return res.status(404).json({
+                message: "No chats found with this id",
+            })
+        }
+
+        if(chat.user.toString() !== req.user._id.toString()){
+            return res.status(403).json({
+                message:"Unauthorized",
+            })
+        }
+
+        await chat.deleteOne();
+
+        res.status(200).json({
+            message: "Chat Deleted",
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        })
+    }
+}
