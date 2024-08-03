@@ -4,6 +4,9 @@ import App from './App.jsx'
 import './index.css'
 import { UserProvider } from './context/userContext.jsx'
 
+
+export const server = "http://localhost:5000";
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <UserProvider>
