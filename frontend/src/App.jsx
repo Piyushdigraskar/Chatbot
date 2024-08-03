@@ -3,7 +3,10 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Verify from './pages/Verify';
 
+
 const App = () => {
+ 
+
   return (
     <> 
       <BrowserRouter>
