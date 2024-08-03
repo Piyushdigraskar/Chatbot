@@ -8,6 +8,9 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [btnLoading, setBtnLoading] = useState(false);
+    const [user, setUser] = useState([]);
+    const [isAuth, setISAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
     
     async function loginUser(email, navigate){
         setBtnLoading(true);
@@ -23,8 +26,7 @@ export const UserProvider = ({ children }) => {
         }
     }
 
-    const [user, setUser] = useState([]);
-    const [isAuth, setISAuth] = useState(false);
+    
 
     async function verifyUser(otp, navigate){
         const verifyToken = localStorage.getItem('verifyToken');
@@ -42,9 +44,11 @@ export const UserProvider = ({ children }) => {
             setBtnLoading(false);
             setISAuth(true);
             setUser(data.user);
+            
         } catch (error) {
             toast.error(error.response.data.message);
             setBtnLoading(false);
+            
         }
     }
 
@@ -58,9 +62,11 @@ export const UserProvider = ({ children }) => {
 
             setISAuth(true);
             setUser(data);
+            setLoading(false);
         } catch (error) {
             console.log(error);
             setISAuth(false);
+            setLoading(false);
         }
     }
 
@@ -68,7 +74,7 @@ export const UserProvider = ({ children }) => {
         fetchUser();
     }, [])
 
-    return <UserContext.Provider value={{loginUser, btnLoading, isAuth, setISAuth, user, verifyUser }}>
+    return <UserContext.Provider value={{loginUser, btnLoading, isAuth, setISAuth, user, verifyUser, loading}}>
         {children}
         <Toaster />
     </UserContext.Provider>
