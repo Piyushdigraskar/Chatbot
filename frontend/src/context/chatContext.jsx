@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import axios from 'axios';
 
-const ChatContext = createContext()
+const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
