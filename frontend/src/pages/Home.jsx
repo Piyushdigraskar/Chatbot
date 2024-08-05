@@ -6,7 +6,7 @@ import { IoMdSend } from "react-icons/io";
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header';
 import { ChatData } from '../context/chatContext';
-import { LoadingSmall } from '../components/Loading';
+import { LoadingBig, LoadingSmall } from '../components/Loading';
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +15,7 @@ const Home = () => {
     setIsOpen(!isOpen);
   }
 
-  const { fetchResponse, messages, prompt, setPrompt, newReqLoading } = ChatData();
+  const { fetchResponse, messages, prompt, setPrompt, newReqLoading, loading } = ChatData();
 
   const submitHandler = (e)=>{
     e.preventDefault();
@@ -41,7 +41,8 @@ const Home = () => {
         </button>
         <div className="flex-1 p-6 mb-20 md:mb-0">
           <Header />
-          <div className="flex-1 p-6 max-h-[600px] overflow-y-auto mb-20 md:mb-0 thin-scrollbar" ref={messageContainerRef}>
+          {
+            loading ? <LoadingBig /> : <div className="flex-1 p-6 max-h-[600px] overflow-y-auto mb-20 md:mb-0 thin-scrollbar" ref={messageContainerRef}>
             {
               messages && messages.length > 0 ? messages.map((e, i) => (
                 <div key={i}>
@@ -65,6 +66,7 @@ const Home = () => {
               newReqLoading && <LoadingSmall />
             }
           </div>
+          }
         </div>
       </div>
 

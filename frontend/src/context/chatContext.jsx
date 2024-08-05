@@ -10,7 +10,9 @@ export const ChatProvider = ({ children }) => {
     const [prompt, setPrompt] = useState("");
     const [newReqLoading, setNewReqLoading] = useState(false);
     const [chats, setChats] = useState([]);
-    const [createLoad, setCreateLoad] = useState(false)
+    const [createLoad, setCreateLoad] = useState(false);
+    const [selected, setSelected] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     async function fetchResponse() {
         if (prompt === "") return alert('Write a prompt');
@@ -32,6 +34,15 @@ export const ChatProvider = ({ children }) => {
 
             setMessages((prev) => [...prev, message]);
             setNewReqLoading(false);
+
+            const {data} = await axios.post(`${server}/api/chat/${selected}`, {
+                question: prompt,
+                answer: response["data"]["candidates"][0]["content"]["parts"][0]["text"],
+            },{
+                headers: {
+                    token: localStorage.getItem("token"),
+                }
+            })
         } catch (error) {
             alert("Something went wrong")
             console.log(error);
@@ -48,6 +59,7 @@ export const ChatProvider = ({ children }) => {
             })
 
             setChats(data);
+            setSelected(data[0]._id)
         } catch (error) {
             console.log(error);
         }
@@ -69,10 +81,45 @@ export const ChatProvider = ({ children }) => {
         }
     }
 
+    async function fetchMessages(){
+        setLoading(true);
+        try {
+            const {data} = await axios.get(`${server}/api/chat/${selected}`,{
+                headers:{
+                    token: localStorage.getItem("token"),
+                }
+            });
+            setMessages(data);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    }
+
+    async function deleteChat(id){
+        try {
+            const {data} = await axios.delete(`${server}/api/chat/${id}`, {
+                headers: {
+                    token: localStorage.getItem('token'),
+                }
+            });
+            toast.success(data.message);
+            fetchChats();
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong");
+        }
+    }
+
     useEffect(() => {
         fetchChats();
     }, [])
-    return <ChatContext.Provider value={{ fetchResponse, messages, prompt, setPrompt, newReqLoading, chats, createChat, createLoad }}>
+
+    useEffect(()=>{
+        fetchMessages();
+    }, [selected])
+    return <ChatContext.Provider value={{ fetchResponse, messages, prompt, setPrompt, newReqLoading, chats, createChat, createLoad, selected, setSelected, loading, setLoading, deleteChat, fetchChats }}>
         {children}
     </ChatContext.Provider>
 }

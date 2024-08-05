@@ -2,18 +2,21 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserData } from '../context/userContext';
 import { LoadingSpinner } from '../components/Loading';
+import { ChatData } from '../context/chatContext';
 
 const Verify = () => {
     const [otp, setOtp] = useState('');
 
     const {verifyUser, btnLoading} = UserData();
 
+    const {fetchChats} = ChatData();
+
     const navigate = useNavigate();
 
     const handleSubmit = (e)=>{
         e.preventDefault();
         //onverting otp to number because in backend otp is expected to be a number
-        verifyUser(Number(otp), navigate);
+        verifyUser(Number(otp), navigate, fetchChats);
     }
   return (
     <div className='flex justify-center items-center h-screen'>
