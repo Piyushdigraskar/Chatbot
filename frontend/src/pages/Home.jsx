@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CgProfile } from "react-icons/cg";
 import { FaRobot } from "react-icons/fa";
@@ -22,6 +22,16 @@ const Home = () => {
     fetchResponse();
   }
 
+  const messageContainerRef = useRef();
+  useEffect(()=>{
+    if(messageContainerRef.current){
+      messageContainerRef.current.scrollTo({
+        top: messageContainerRef.current.scrollHeight,
+        behavior:"smooth",
+      })
+    }
+  }, [messages])
+
   return (
     <div className='flex h-screen bg-gray-900 text-white'>
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
@@ -31,7 +41,7 @@ const Home = () => {
         </button>
         <div className="flex-1 p-6 mb-20 md:mb-0">
           <Header />
-          <div className="flex-1 p-6 max-h-[600px] overflow-y-auto mb-20 md:mb-0 thin-scrollbar">
+          <div className="flex-1 p-6 max-h-[600px] overflow-y-auto mb-20 md:mb-0 thin-scrollbar" ref={messageContainerRef}>
             {
               messages && messages.length > 0 ? messages.map((e, i) => (
                 <div key={i}>
