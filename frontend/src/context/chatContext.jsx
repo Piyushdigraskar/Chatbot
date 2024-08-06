@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios';
-import { server } from "../main";
 import toast from "react-hot-toast";
 
 const ChatContext = createContext();
@@ -35,7 +34,7 @@ export const ChatProvider = ({ children }) => {
             setMessages((prev) => [...prev, message]);
             setNewReqLoading(false);
 
-            const {data} = await axios.post(`${server}/api/chat/${selected}`, {
+            const {data} = await axios.post(`/api/chat/${selected}`, {
                 question: prompt,
                 answer: response["data"]["candidates"][0]["content"]["parts"][0]["text"],
             },{
@@ -52,7 +51,7 @@ export const ChatProvider = ({ children }) => {
 
     async function fetchChats() {
         try {
-            const { data } = await axios.get(`${server}/api/chat/all`, {
+            const { data } = await axios.get(`/api/chat/all`, {
                 headers: {
                     token: localStorage.getItem('token'),
                 }
@@ -68,7 +67,7 @@ export const ChatProvider = ({ children }) => {
     async function createChat() {
         setCreateLoad(true);
         try {
-            const { data } = await axios.post(`${server}/api/chat/new`, {}, {
+            const { data } = await axios.post(`/api/chat/new`, {}, {
                 headers: {
                     token: localStorage.getItem("token"),
                 }
@@ -84,7 +83,7 @@ export const ChatProvider = ({ children }) => {
     async function fetchMessages(){
         setLoading(true);
         try {
-            const {data} = await axios.get(`${server}/api/chat/${selected}`,{
+            const {data} = await axios.get(`/api/chat/${selected}`,{
                 headers:{
                     token: localStorage.getItem("token"),
                 }
@@ -99,7 +98,7 @@ export const ChatProvider = ({ children }) => {
 
     async function deleteChat(id){
         try {
-            const {data} = await axios.delete(`${server}/api/chat/${id}`, {
+            const {data} = await axios.delete(`/api/chat/${id}`, {
                 headers: {
                     token: localStorage.getItem('token'),
                 }
@@ -115,7 +114,7 @@ export const ChatProvider = ({ children }) => {
 
     async function downloadChat(id) {
         try {
-          const { data } = await axios.get(`${server}/api/chat/download/${id}`, {
+          const { data } = await axios.get(`/api/chat/download/${id}`, {
             headers: {
               token: localStorage.getItem('token'),
             },

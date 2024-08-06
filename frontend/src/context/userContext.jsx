@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {Toaster, toast} from 'react-hot-toast'
 import axios from 'axios';
-import { server } from "../main";
 
 
 const UserContext = createContext();
@@ -15,7 +14,7 @@ export const UserProvider = ({ children }) => {
     async function loginUser(email, navigate){
         setBtnLoading(true);
         try {
-            const {data} = await axios.post(`${server}/api/user/login`, {email});
+            const {data} = await axios.post(`/api/user/login`, {email});
             toast.success(data.message); 
             localStorage.setItem("verifyToken", data.verifyToken);
             navigate('/verify');
@@ -36,7 +35,7 @@ export const UserProvider = ({ children }) => {
             return toast.error("Please Give Token")
         }
         try {
-            const {data} = await axios.post(`${server}/api/user/verify`, {otp, verifyToken});
+            const {data} = await axios.post(`/api/user/verify`, {otp, verifyToken});
             toast.success(data.message); 
             localStorage.clear();
             localStorage.setItem("token", data.token);
@@ -55,7 +54,7 @@ export const UserProvider = ({ children }) => {
 
     async function fetchUser(){
         try {
-            const {data} = await axios.get(`${server}/api/user/me`, {
+            const {data} = await axios.get(`/api/user/me`, {
                 headers:{
                     token: localStorage.getItem('token'),
                 }
