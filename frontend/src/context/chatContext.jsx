@@ -106,11 +106,32 @@ export const ChatProvider = ({ children }) => {
             });
             toast.success(data.message);
             fetchChats();
+            window.location.reload();
         } catch (error) {
             console.log(error);
             alert("Something went wrong");
         }
     }
+
+    async function downloadChat(id) {
+        try {
+          const { data } = await axios.get(`${server}/api/chat/download/${id}`, {
+            headers: {
+              token: localStorage.getItem('token'),
+            },
+            responseType: 'blob'
+          });
+          const url = window.URL.createObjectURL(new Blob([data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `chat_${id}.txt`);
+          document.body.appendChild(link);
+          link.click();
+        } catch (error) {
+          console.log(error);
+          toast.error("Something went wrong");
+        }
+      }
 
     useEffect(() => {
         fetchChats();
@@ -119,7 +140,7 @@ export const ChatProvider = ({ children }) => {
     useEffect(()=>{
         fetchMessages();
     }, [selected])
-    return <ChatContext.Provider value={{ fetchResponse, messages, prompt, setPrompt, newReqLoading, chats, createChat, createLoad, selected, setSelected, loading, setLoading, deleteChat, fetchChats }}>
+    return <ChatContext.Provider value={{ fetchResponse, messages, prompt, setPrompt, newReqLoading, chats, createChat, createLoad, selected, setSelected, loading, setLoading, deleteChat, fetchChats, downloadChat }}>
         {children}
     </ChatContext.Provider>
 }

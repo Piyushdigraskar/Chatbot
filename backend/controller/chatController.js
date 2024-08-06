@@ -112,3 +112,20 @@ export const deleteChat = async(req, res)=>{
         })
     }
 }
+
+export const downloadChat = async (req, res) => {
+    try {
+      const chatId = req.params.id;
+      const conversations = await Conversation.find({ chat: chatId });
+      if (!conversations) {
+        return res.status(404).send({ message: 'Conversation not found' });
+      }
+      const chatData = conversations.map(conversation => `${conversation.question}\n${conversation.answer}\n\n`).join('');
+      res.setHeader('Content-Disposition', `attachment; filename="chat.txt"`);
+      res.setHeader('Content-Type', 'text/plain');
+      res.send(chatData);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Error downloading chat data' });
+    }
+  };

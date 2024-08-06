@@ -15,7 +15,7 @@ const Home = () => {
     setIsOpen(!isOpen);
   }
 
-  const { fetchResponse, messages, prompt, setPrompt, newReqLoading, loading } = ChatData();
+  const { fetchResponse, messages, prompt, setPrompt, newReqLoading, loading, chats} = ChatData();
 
   const submitHandler = (e)=>{
     e.preventDefault();
@@ -70,7 +70,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 right-0 left-auto p-4 bg-gray-900 w-full md:w-[75%]">
+      {chats && chats.length === 0 ? "" : <div className="fixed bottom-0 right-0 left-auto p-4 bg-gray-900 w-full md:w-[75%]">
         <form onSubmit={submitHandler} className='flex justify-center items-center'> 
           <input
           className='flex-grow p-4 bg-gray-700 rounded-l text-white outline-none'
@@ -84,7 +84,7 @@ const Home = () => {
             <IoMdSend />
             </button>
         </form>
-      </div>
+      </div>}
     </div>
   )
 }
